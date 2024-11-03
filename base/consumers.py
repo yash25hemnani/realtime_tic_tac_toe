@@ -22,8 +22,6 @@ class MySyncConsumer(SyncConsumer):
             data = json.loads(string)
             print('Data with type - ', data, type(data))
 
-            # Adding the user from the data sent from the frontend that is User - /Username/ has joined.
-
             if 'User' in data.keys():
                 async_to_sync(self.channel_layer.group_send)(self.room_code, {
                     'type':'user.message',
@@ -31,7 +29,6 @@ class MySyncConsumer(SyncConsumer):
                 })
 
             if 'cubeId' in data.keys():
-                print('I am here')
                 async_to_sync(self.channel_layer.group_send)(self.room_code, {
                     'type':'game.message',
                     'message': json.dumps(data)
@@ -39,7 +36,7 @@ class MySyncConsumer(SyncConsumer):
 
             if 'Winner' in data.keys():
                 async_to_sync(self.channel_layer.group_send)(self.room_code, {
-                    'type':'game.message',
+                    'type':'winner.message',
                     'message': json.dumps(data)
                 })
 
@@ -57,6 +54,13 @@ class MySyncConsumer(SyncConsumer):
 
     def game_message(self, event):
         print('Game Message: ', event)
+        self.send({
+            'type':'websocket.send',
+            'text': event['message']
+        })
+    
+    def winner_message(self, event):
+        print('Winner Message: ', event)
         self.send({
             'type':'websocket.send',
             'text': event['message']

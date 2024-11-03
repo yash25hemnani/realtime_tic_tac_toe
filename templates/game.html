@@ -132,12 +132,12 @@
             cube.addEventListener('click', function(){
                 cube.textContent = current_state;
                 game_state[parseInt(cube.id)-1] = current_state
-                console.log(game_state)
 
                 data_to_send = {
                     'cubeId':cube.id,
                     'currentState':current_state,
-                    'currentUser': user_name
+                    'currentUser': user_name,
+                    'gameState': game_state,
                 }
 
                 ws.send(JSON.stringify(data_to_send));
@@ -163,9 +163,7 @@
             if (text_data.cubeId){
 
                 document.getElementById(text_data.cubeId).textContent = text_data.currentState
-
-                document.getElementById('user_turn').textContent = 
-
+                game_state = text_data.gameState;
                 checkGameState(game_state, text_data.currentUser)
 
                 if (text_data.currentState == 'X'){
@@ -174,8 +172,17 @@
                     current_state = 'X'
                 }
                 
-            
+
             }
+
+            if (text_data.Winner){
+                alert(text_data.Winner)
+            }
+
+            if (text_data.Tie){
+                alert(text_data.Tie)
+            }
+
         }
 
         ws.close = function(event){
