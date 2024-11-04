@@ -40,6 +40,13 @@ class MySyncConsumer(SyncConsumer):
                     'message': json.dumps(data)
                 })
 
+            if 'work' in data.keys():
+                async_to_sync(self.channel_layer.group_send)(self.room_code, {
+                    'type':'game.message',
+                    'message': json.dumps(data)
+                })
+            
+
         except Exception as e:
             print(e)
         

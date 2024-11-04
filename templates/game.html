@@ -76,6 +76,9 @@
 
         let current_state = 'X'
 
+        let players = {
+            'work': 'user_initiation',
+        }
         
         var ws = new WebSocket('ws://127.0.0.1:8000/ws/sc/'+room_code+'?username='+user_name)
 
@@ -156,8 +159,23 @@
             console.log('Message Data...', event.data)
             text_data = JSON.parse(event.data)
 
-            if (text_data.User){
-                alert(text_data.User + ' joined the group.')
+            if (text_data.User){{
+                alert(text_data.User + ' joined the group.');
+                // Adding User to Player object along with their turn.
+                if(!players.hasOwnProperty(text_data.User)){
+                    if(Object.keys(players).length == 1){
+                        alert('Player added with turn 1')
+                        players[text_data.User] = {
+                        'turn':1
+                    }} else {
+                        alert('Player added with turn 0')
+                        players[text_data.User] = {
+                        'turn':0
+                    }
+                }
+                } 
+                ws.send(JSON.stringify(players))
+                }
             }
 
             if (text_data.cubeId){
@@ -181,6 +199,12 @@
 
             if (text_data.Tie){
                 alert(text_data.Tie)
+            }
+
+            if (text_data.work){
+                players = text_data;
+                console.log('Players ----->')
+                console.log(players)
             }
 
         }
