@@ -4,7 +4,9 @@ from channels.exceptions import StopConsumer
 
 class MySyncConsumer(SyncConsumer):
     def websocket_connect(self, event):
+        # Websocket connection received from frontend
         print('Websocket Connected...', event)
+        # Sending data to continue connection to the frontend
         self.send({
             'type':'websocket.accept'
         })
@@ -21,6 +23,7 @@ class MySyncConsumer(SyncConsumer):
         try:
             data = json.loads(string)
             print('Data with type - ', data, type(data))
+
 
             if 'User' in data.keys():
                 async_to_sync(self.channel_layer.group_send)(self.room_code, {
